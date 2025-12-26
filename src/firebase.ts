@@ -3,7 +3,7 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDnPQIK0AKM-_skp3yjedGl3RrgrEU9oWw",
+  apiKey: import.meta.env.FIREBASE_API_KEY,
   authDomain: "technical-quiz-1c612.firebaseapp.com",
   projectId: "technical-quiz-1c612",
   storageBucket: "technical-quiz-1c612.firebasestorage.app",
