@@ -7,16 +7,35 @@ import { QuizResults } from "@/components/QuizResults";
 import MemberLogin from "@/components/MemberLogin";
 import { Link } from "react-router-dom";
 import { mockQuestions } from "@/data/mockQuestions";
+import { fetchActiveQuestionSetMeta, isAutoQuiz } from "@/lib/quizMode";
 
 /* ... (rest of imports remain same) ... */
 
 export default function Index() {
-  const { state, dispatch } = useQuiz();
+  const { state, dispatch, startQuiz } = useQuiz();
   const [showEntryForm, setShowEntryForm] = useState(false);
+  const [autoQuizMode, setAutoQuizMode] = useState(false);
 
   useEffect(() => {
     dispatch({ type: "SET_QUESTIONS", payload: mockQuestions });
   }, [dispatch]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const meta = await fetchActiveQuestionSetMeta();
+        if (!mounted) return;
+        setAutoQuizMode(isAutoQuiz(meta.questionSet));
+      } catch (err) {
+        console.error("Failed to detect auto quiz mode:", err);
+        if (mounted) setAutoQuizMode(false);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   if (state.isSubmitted) return <QuizResults />;
   if (state.startTime && state.userInfo) return <QuizInterface />;
@@ -41,7 +60,7 @@ export default function Index() {
               </div>
             </div>
 
-            <UserEntryForm onClose={() => setShowEntryForm(false)} />
+            <UserEntryForm onClose={() => setShowEntryForm(false)} autoQuizMode={autoQuizMode} />
           </div>
         </div>
       </div>
@@ -145,13 +164,30 @@ export default function Index() {
                 </div>
 
                 <div className="pt-3 flex flex-col gap-3">
-                  <div className="text-sm text-slate-300">Please confirm your details before starting the test.</div>
-                  <button
-                    className="w-full border border-slate-700 text-slate-200 py-2 rounded-lg hover:bg-slate-800"
-                    onClick={() => setShowEntryForm(true)}
-                  >
-                    Proceed with the Test
-                  </button>
+                  <div className="text-sm text-slate-300">
+                    {autoQuizMode
+                      ? "Auto quiz detected. You can start immediately."
+                      : "Please confirm your details before starting the test."}
+                  </div>
+                  {autoQuizMode ? (
+                    <button
+                      className="w-full border border-slate-700 text-slate-200 py-2 rounded-lg hover:bg-slate-800"
+                      onClick={async () => {
+                        const name = state.authUser?.name ?? "Participant";
+                        const email = state.authUser?.email ?? "";
+                        await startQuiz({ name, email, rollId: "" });
+                      }}
+                    >
+                      Start Auto Quiz
+                    </button>
+                  ) : (
+                    <button
+                      className="w-full border border-slate-700 text-slate-200 py-2 rounded-lg hover:bg-slate-800"
+                      onClick={() => setShowEntryForm(true)}
+                    >
+                      Proceed with the Test
+                    </button>
+                  )}
 
                   <Link to="/dashboard">
                     <button className="w-full bg-[rgba(99,102,241,0.12)] border border-slate-700 text-slate-200 py-2 rounded-lg hover:bg-[rgba(99,102,241,0.16)]">

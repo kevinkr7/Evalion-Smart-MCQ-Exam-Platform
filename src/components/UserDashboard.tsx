@@ -6,6 +6,7 @@ import { collection, query, where, getDocs, limit, doc, getDoc } from "firebase/
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { fetchActiveQuestionSetMeta, isAutoQuiz } from "@/lib/quizMode";
 
 type ResultRow = {
   id: string;
@@ -36,6 +37,12 @@ export default function UserDashboard() {
     async function loadReleasedFlag() {
       setLoadingReleased(true);
       try {
+        const meta = await fetchActiveQuestionSetMeta();
+        if (isAutoQuiz(meta.questionSet)) {
+          setReleased(true);
+          return;
+        }
+
         const ref = doc(db, "settings", "results");
         const snap = await getDoc(ref);
         if (!mounted) return;
@@ -162,6 +169,13 @@ export default function UserDashboard() {
     setLoading(true);
     setLoadingReleased(true);
     try {
+      const meta = await fetchActiveQuestionSetMeta();
+      if (isAutoQuiz(meta.questionSet)) {
+        setReleased(true);
+        window.location.reload();
+        return;
+      }
+
       const ref = doc(db, "settings", "results");
       const snap = await getDoc(ref);
       setReleased(snap.exists() ? ((snap.data() as any).released === true) : false);

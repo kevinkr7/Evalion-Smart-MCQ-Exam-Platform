@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useToast } from "@/hooks/use-toast";
+import { fetchActiveQuestionSetMeta, isAutoQuiz } from "@/lib/quizMode";
 
 export function QuizResults() {
   const { state, resetQuiz } = useQuiz();
@@ -27,6 +28,12 @@ export function QuizResults() {
 
     const handleOpenReview = async () => {
     try {
+      const meta = await fetchActiveQuestionSetMeta();
+      if (isAutoQuiz(meta.questionSet)) {
+        navigate("/review");
+        return;
+      }
+
       // check settings doc at settings/results -> { released: boolean }
       const ref = doc(db, "settings", "results");
       const snap = await getDoc(ref);

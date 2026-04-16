@@ -17,9 +17,10 @@ import { db } from "../firebase";
 
 type Props = {
   onClose?: () => void;
+  autoQuizMode?: boolean;
 };
 
-export function UserEntryForm({ onClose }: Props) {
+export function UserEntryForm({ onClose, autoQuizMode = false }: Props) {
   const { startQuiz, state } = useQuiz();
   const { toast } = useToast();
 
@@ -98,10 +99,17 @@ export function UserEntryForm({ onClose }: Props) {
     else if (!/\S+@\S+\.\S+/.test(emailStr)) newErrors.email = "Please enter a valid email address";
 
     const roll = String(formData.rollId || "").trim();
-    if (!roll) newErrors.rollId = "Register number is required";
-    else if (!/^\d{12}$/.test(roll)) newErrors.rollId = "Register number must be exactly 12 digits (numbers only)";
+    if (!autoQuizMode) {
+      if (!roll) newErrors.rollId = "Register number is required";
+      else if (!/^\d{12}$/.test(roll)) newErrors.rollId = "Register number must be exactly 12 digits (numbers only)";
+    } else if (roll && !/^\d{6,14}$/.test(roll)) {
+      newErrors.rollId = "Register number format looks unusual, but you can continue in auto mode.";
+    }
 
     setErrors(newErrors);
+    if (autoQuizMode) {
+      return !newErrors.name && !newErrors.email;
+    }
     return !newErrors.name && !newErrors.email && !newErrors.rollId;
   };
 
@@ -112,7 +120,7 @@ export function UserEntryForm({ onClose }: Props) {
     const email = String(formData.email || "").trim().toLowerCase();
     const rollIdStr = String(formData.rollId ?? "").trim();
 
-    if (!email || !name || !rollIdStr) {
+    if (!email || !name || (!rollIdStr && !autoQuizMode)) {
       toast({
         title: "Missing data",
         description: "Some profile details are missing. Please contact admin or fill them in.",
@@ -125,13 +133,15 @@ export function UserEntryForm({ onClose }: Props) {
       setCheckingExisting(true);
       const emailTrimmed = email;
 
-      const q = query(collection(db, "quizResults"), where("email", "==", emailTrimmed), limit(1));
-      const snap = await getDocs(q);
-      if (!snap.empty) {
-        window.alert(
-          "You have already submitted the quiz with this email. If you believe this is an error, contact the administrator."
-        );
-        return;
+      if (!autoQuizMode) {
+        const q = query(collection(db, "quizResults"), where("email", "==", emailTrimmed), limit(1));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          window.alert(
+            "You have already submitted the quiz with this email. If you believe this is an error, contact the administrator."
+          );
+          return;
+        }
       }
 
       // ensure users/{uid} has rollId (create/merge if necessary)
@@ -188,13 +198,15 @@ export function UserEntryForm({ onClose }: Props) {
 
     try {
       setCheckingExisting(true);
-      const q = query(collection(db, "quizResults"), where("email", "==", emailTrimmed), limit(1));
-      const snap = await getDocs(q);
-      if (!snap.empty) {
-        window.alert(
-          "You have already submitted the quiz with this email. If you believe this is an error, contact the administrator."
-        );
-        return;
+      if (!autoQuizMode) {
+        const q = query(collection(db, "quizResults"), where("email", "==", emailTrimmed), limit(1));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          window.alert(
+            "You have already submitted the quiz with this email. If you believe this is an error, contact the administrator."
+          );
+          return;
+        }
       }
 
       // save users doc if signed-in and missing (store rollId as string)
