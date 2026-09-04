@@ -19,6 +19,7 @@ export type QuizResultPayload = {
   score?: number | null;
   answers: Record<string, string | null>; // all qids -> 'A'|'B'|'C'|'D' or null
   questionIds: string[]; // order of questions
+  questionSetId?: string | null; // NEW: Track which question set this attempt belongs to
   questionsSnapshot?: StoredQuestion[]; // optional full snapshot of questions
   tabSwitchCount?: number;
   extra?: Record<string, any>;

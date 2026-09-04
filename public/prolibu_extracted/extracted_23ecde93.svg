@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1460" height="730" viewBox="0 0 1460 730">
+<defs>
+  <linearGradient id="ip0_grad0" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0A0A0A"/>
+    <stop offset="0.5" stop-color="#1E408A"/>
+    <stop offset="1" stop-color="#2563EB"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad1" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0A0A0A"/>
+    <stop offset="0.25" stop-color="#1E408A"/>
+    <stop offset="0.5" stop-color="#2563EB"/>
+    <stop offset="1" stop-color="#EFF4FF"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad2" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#1E408A"/>
+    <stop offset="0.5" stop-color="#2563EB"/>
+    <stop offset="1" stop-color="#EFF4FF"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad3" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#6090FA"/>
+    <stop offset="1" stop-color="#FFFFFF"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad4" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#F7F6F0"/>
+    <stop offset="1" stop-color="#F7F6F0"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad5" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#F3F2EC"/>
+    <stop offset="1" stop-color="#F3F2EC"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad6" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#E6E5DF"/>
+    <stop offset="1" stop-color="#F3F2EC"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad7" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#1F1C1B"/>
+    <stop offset="0.5" stop-color="#8A7E73"/>
+    <stop offset="1" stop-color="#E6E5DF"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad8" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0A0A0A"/>
+    <stop offset="0.5" stop-color="#A41039"/>
+    <stop offset="1" stop-color="#F32A73"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad9" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0A0A0A"/>
+    <stop offset="0.25" stop-color="#A41039"/>
+    <stop offset="0.5" stop-color="#F32A73"/>
+    <stop offset="1" stop-color="#FEF1F6"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad10" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#A41039"/>
+    <stop offset="0.5" stop-color="#F32A73"/>
+    <stop offset="1" stop-color="#FEF1F6"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad11" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FB6BA3"/>
+    <stop offset="1" stop-color="#FFFFFF"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad12" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0A0A0A"/>
+    <stop offset="0.5" stop-color="#046147"/>
+    <stop offset="1" stop-color="#02A270"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad13" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0A0A0A"/>
+    <stop offset="0.25" stop-color="#046147"/>
+    <stop offset="0.5" stop-color="#02A270"/>
+    <stop offset="1" stop-color="#ECFDF5"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad14" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#046147"/>
+    <stop offset="0.5" stop-color="#02A270"/>
+    <stop offset="1" stop-color="#ECFDF5"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad15" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#31D69A"/>
+    <stop offset="1" stop-color="#FFFFFF"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad16" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0A0A0A"/>
+    <stop offset="0.5" stop-color="#7C420B"/>
+    <stop offset="1" stop-color="#FDBF00"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad17" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0A0A0A"/>
+    <stop offset="0.25" stop-color="#7C420B"/>
+    <stop offset="0.5" stop-color="#FDBF00"/>
+    <stop offset="1" stop-color="#FFFFEA"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad18" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#7C420B"/>
+    <stop offset="0.5" stop-color="#FDBF00"/>
+    <stop offset="1" stop-color="#FFFFEA"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad19" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FDBF00"/>
+    <stop offset="1" stop-color="#FFFFFF"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad20" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0A0A0A"/>
+    <stop offset="0.5" stop-color="#311B92"/>
+    <stop offset="1" stop-color="#6C3CF0"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad21" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0A0A0A"/>
+    <stop offset="0.25" stop-color="#311B92"/>
+    <stop offset="0.5" stop-color="#6C3CF0"/>
+    <stop offset="1" stop-color="#EDE7FF"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad22" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#311B92"/>
+    <stop offset="0.5" stop-color="#6C3CF0"/>
+    <stop offset="1" stop-color="#EDE7FF"/>
+  </linearGradient>
+  <linearGradient id="ip0_grad23" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#9B7AFD"/>
+    <stop offset="1" stop-color="#FFFFFF"/>
+  </linearGradient>
+  <linearGradient id="ip0_bg_grad21" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="730">
+    <stop offset="0" stop-color="#0A0A0A"/>
+    <stop offset="0.25" stop-color="#311B92"/>
+    <stop offset="0.5" stop-color="#6C3CF0"/>
+    <stop offset="1" stop-color="#EDE7FF"/>
+  </linearGradient>
+</defs>
+<rect width="1460" height="730" fill="url(#ip0_bg_grad21)"/>
+<polygon points="568.31,828.01 697.66,753.33 632.99,715.99 503.64,790.67" fill="url(#ip0_grad22)" stroke="#1F1C1B" stroke-width="1" stroke-opacity="0.08"/>
+<polygon points="697.66,753.33 697.66,603.97 632.99,566.63 632.99,715.99" fill="url(#ip0_grad20)"/>
+<path d="M762.34,790.67 L762.34,491.95 L503.64,641.31 L503.64,940.03 Z M697.66,753.33 L697.66,603.97 L568.31,678.65 L568.31,828.01 Z" fill="url(#ip0_grad21)" fill-rule="evenodd" stroke="#1F1C1B" stroke-width="1" stroke-opacity="0.08"/>
+<polygon points="503.64,940.03 503.64,641.31 438.96,603.97 438.96,902.69" fill="url(#ip0_grad20)"/>
+<polygon points="697.66,454.61 438.96,603.97 503.64,641.31 762.34,491.95" fill="url(#ip0_grad22)" stroke="#1F1C1B" stroke-width="1" stroke-opacity="0.08"/>
+<polygon points="956.36,902.69 956.36,753.33 891.69,715.99 891.69,865.35" fill="url(#ip0_grad20)"/>
+<polygon points="827.01,977.37 956.36,902.69 891.69,865.35 762.34,940.03" fill="url(#ip0_grad22)" stroke="#1F1C1B" stroke-width="1" stroke-opacity="0.08"/>
+<path d="M1021.04,940.03 L1021.04,641.31 L762.34,790.67 L762.34,1089.39 Z M956.36,902.69 L956.36,753.33 L827.01,828.01 L827.01,977.37 Z" fill="url(#ip0_grad21)" fill-rule="evenodd" stroke="#1F1C1B" stroke-width="1" stroke-opacity="0.08"/>
+<polygon points="956.36,603.97 697.66,753.33 762.34,790.67 1021.04,641.31" fill="url(#ip0_grad22)" stroke="#1F1C1B" stroke-width="1" stroke-opacity="0.08"/>
+<polygon points="762.34,1089.39 762.34,790.67 697.66,753.33 697.66,1052.05" fill="url(#ip0_grad20)"/>
+</svg>

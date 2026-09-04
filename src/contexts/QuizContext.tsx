@@ -233,16 +233,29 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
   // listen to firebase auth and populate authUser in state
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u: User | null) => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
       if (u) {
+        let dbName = u.displayName;
+        try {
+          const docRef = doc(db, "users", u.uid);
+          const snap = await getDoc(docRef);
+          if (snap.exists()) {
+            const data = snap.data();
+            if (data.Name) dbName = data.Name;
+            else if (data.name) dbName = data.name;
+          }
+        } catch (e) {
+          console.error("Failed to fetch user doc for name", e);
+        }
+
         dispatch({
           type: "SET_AUTH_USER",
-          payload: { uid: u.uid, email: u.email ?? null, name: u.displayName ?? null },
+          payload: { uid: u.uid, email: u.email ?? null, name: dbName ?? null },
         });
         // also populate legacy userInfo if not set
         dispatch({
           type: "SET_USER_INFO",
-          payload: { name: u.displayName ?? "", email: u.email ?? "" },
+          payload: { name: dbName ?? "", email: u.email ?? "" },
         });
       } else {
         dispatch({ type: "SET_AUTH_USER", payload: null });
@@ -276,6 +289,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         currentQuestionIndex: state.currentQuestionIndex,
         startTime: state.startTime,
         tabSwitchCount: state.tabSwitchCount,
+        questions: state.questions,
       };
       try {
         localStorage.setItem("quizState", JSON.stringify(toSave));
@@ -291,7 +305,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     if (!saved) return;
     try {
       const parsed = JSON.parse(saved);
-      if (!parsed || !parsed.startTime) {
+      if (!parsed || !parsed.startTime || !parsed.questions || parsed.questions.length === 0) {
         localStorage.removeItem("quizState");
         return;
       }
@@ -323,6 +337,10 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     try {
       // fetch questions (using settings/activeSetId or fallback)
       const fetched = await fetchQuestionsFromFirestore();
+      
+      if (!fetched || fetched.length === 0) {
+        throw new Error("No active questions found for this quiz. Please contact the administrator.");
+      }
 
       // per-question: shuffle choices per-student AND compute new correct label
       const randomizedQuestions: Question[] = fetched.map((qDoc) => {
@@ -385,6 +403,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       console.error("[QuizContext] startQuiz error", err);
       dispatch({ type: "SET_ERROR", payload: "Failed to load questions. Please try later." });
+      throw err;
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
@@ -453,6 +472,16 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     // ensure rollId is string
     const rollIdStr = (state.userInfo?.rollId ?? "") + "";
 
+    // Fetch current activeSetId so we can tag this submission correctly
+    let currentSetId = null;
+    try {
+      const { fetchActiveQuestionSetMeta } = await import("@/lib/quizMode");
+      const meta = await fetchActiveQuestionSetMeta();
+      currentSetId = meta.activeSetId;
+    } catch (e) {
+      console.warn("Could not fetch activeSetId for submission:", e);
+    }
+
     const payload: any = {
       uid: state.authUser?.uid ?? null,
       name: state.userInfo?.name ?? null,
@@ -461,6 +490,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       score: finalScore,
       answers: answersComplete,
       questionIds,
+      questionSetId: currentSetId,
       questionsSnapshot,
       tabSwitchCount: state.tabSwitchCount ?? 0,
     };

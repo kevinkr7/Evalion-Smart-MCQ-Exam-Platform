@@ -10,6 +10,11 @@ import AdminDashboard from "@/components/AdminDashboard";
 import ResultsReview from "@/components/ResultsReview";
 import { QuizProvider } from "@/contexts/QuizContext";
 import UserDashboard from "@/components/UserDashboard";
+import StartTest from "./pages/StartTest";
+import RegisterPage from "./pages/RegisterPage";
+
+import LoginPage from "./pages/LoginPage";
+import ProfileSettings from "./pages/ProfileSettings";
 
 const queryClient = new QueryClient();
 
@@ -22,9 +27,13 @@ const App = () => (
         <QuizProvider>
           <Routes>
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/" element={<Index />} />
+            <Route path="/start" element={<StartTest />} />
             <Route path="/review" element={<ResultsReview />} />
             <Route path="/dashboard" element={<UserDashboard />} />
+            <Route path="/profile" element={<ProfileSettings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </QuizProvider>

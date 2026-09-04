@@ -18,6 +18,7 @@ import { auth } from "../firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useQuiz } from "@/contexts/QuizContext";
 import AdminQuestionUploader from "@/components/AdminQuestionUploader";
+import { Home } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 /**
@@ -322,200 +323,289 @@ export default function AdminDashboard() {
     }
   }
 
-  if (isAdmin === null) return <div className="p-6 text-slate-200">Checking admin access...</div>;
-  if (!isAdmin) return <div className="p-6 text-slate-200">Access denied — sign in with an admin email to view this page.</div>;
+  if (isAdmin === null) {
+    return (
+      <div className="min-h-screen bg-[#0b0b0d] text-white font-['Geist'] flex flex-col items-center justify-center">
+        <div className="w-10 h-10 border-t-2 border-indigo-500 rounded-full animate-spin mb-4"></div>
+        <div className="text-slate-400 tracking-wider">Verifying admin access...</div>
+      </div>
+    );
+  }
+  
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-[#0b0b0d] text-white font-['Geist'] flex flex-col items-center justify-center p-6 text-center">
+        <div className="w-16 h-16 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mb-6">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
+        <h2 className="text-2xl font-bold mb-2">Access Denied</h2>
+        <p className="text-slate-400 max-w-md">You do not have administrative privileges. Please sign in with an authorized admin account.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen p-6 bg-gradient-to-br from-[#05040a] via-[#071020] to-[#0b0b14] text-slate-100">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-start justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#7c3aed] via-[#6366f1] to-[#06b6d4]">
-              Admin Dashboard
-            </h1>
-            <p className="text-sm text-slate-300 mt-1">Manage quiz results and upload questions (per set)</p>
+    <div className="min-h-screen bg-[#0b0b0d] text-white font-['Geist'] relative overflow-x-hidden pb-20">
+      {/* Background SVG Noise */}
+      <div className="fixed inset-0 w-full h-full pointer-events-none opacity-[0.03] z-0" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`}}></div>
+
+      <div className="max-w-[1600px] mx-auto p-4 md:p-8 relative z-10">
+        
+        {/* Header */}
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-10">
+          <div className="flex items-center gap-5">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={() => window.location.href = "/"} 
+              className="rounded-full border-white/10 bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all shrink-0 h-12 w-12"
+            >
+              <Home className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
+                 <div className="w-2.5 h-2.5 rounded-full bg-[#7c3aed] shadow-[0_0_15px_rgba(124,58,237,0.8)]"></div>
+                 Admin Dashboard
+              </h1>
+              <p className="text-slate-400 mt-2">Manage quiz results and upload question sets</p>
+            </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-  {/* Left group: data actions */}
-  <div className="flex flex-wrap gap-3">
-    <Button
-      onClick={() => fetchResults()}
-      className="bg-[transparent] border border-slate-700 text-slate-200 hover:bg-slate-800"
-      disabled={loading || deleting}
-    >
-      {loading ? "Refreshing..." : "Refresh"}
-    </Button>
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Left group: data actions */}
+            <div className="flex flex-wrap gap-2 bg-white/5 border border-white/10 p-1.5 rounded-xl backdrop-blur-md">
+              <button
+                onClick={() => fetchResults()}
+                className="px-4 py-2 text-sm font-medium rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+                disabled={loading || deleting}
+              >
+                {loading ? "Refreshing..." : "Refresh Data"}
+              </button>
 
-    <Button
-      onClick={() => exportCSV(filteredResults)}
-      className="bg-gradient-to-r from-[#6366f1] to-[#7c3aed] text-white"
-      disabled={deleting}
-    >
-      Export CSV
-    </Button>
+              <button
+                onClick={() => exportCSV(filteredResults)}
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-[0_0_15px_rgba(79,70,229,0.2)] transition-colors"
+                disabled={deleting}
+              >
+                Export CSV
+              </button>
 
-    <Button
-      onClick={handleDeleteAll}
-      className="bg-gradient-to-r from-[#ef4444] to-[#dc2626] text-white"
-      disabled={deleting}
-    >
-      {deleting ? "Deleting..." : "Delete All"}
-    </Button>
-  </div>
+              <button
+                onClick={handleDeleteAll}
+                className="px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                disabled={deleting}
+              >
+                {deleting ? "Deleting..." : "Delete All"}
+              </button>
+            </div>
 
-  {/* Right group: release toggle */}
-  <div className="flex items-center gap-3 bg-[rgba(7,10,23,0.5)] px-3 py-2 rounded-lg border border-slate-700">
-    <div className="text-sm text-slate-300">
-      Results:
-      <span className={`ml-2 font-semibold ${released ? "text-green-300" : "text-amber-300"}`}>
-        {released === null ? "Loading..." : released ? "Released" : "Hidden"}
-      </span>
-    </div>
-    <Button
-      onClick={handleToggleRelease}
-      className={`text-white px-4 py-2 ${
-        released
-          ? "bg-gradient-to-r from-[#f97316] to-[#ef4444]"
-          : "bg-gradient-to-r from-[#6366f1] to-[#7c3aed]"
-      }`}
-      disabled={toggling}
-    >
-      {toggling ? "Working..." : released ? "Hide Results" : "Release Results"}
-    </Button>
-  </div>
-</div>
-
+            {/* Right group: release toggle */}
+            <div className="flex items-center gap-3 bg-white/5 border border-white/10 p-1.5 pl-4 rounded-xl backdrop-blur-md">
+              <div className="text-sm text-slate-400 font-medium">
+                Results:
+                <span className={`ml-2 font-bold tracking-wide ${released ? "text-indigo-400" : "text-slate-300"}`}>
+                  {released === null ? "..." : released ? "RELEASED" : "HIDDEN"}
+                </span>
+              </div>
+              <button
+                onClick={handleToggleRelease}
+                className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                  released
+                    ? "bg-indigo-950/50 hover:bg-indigo-900/50 text-indigo-300 border border-indigo-500/30"
+                    : "bg-indigo-600 hover:bg-indigo-500 text-white shadow-[0_0_15px_rgba(79,70,229,0.2)]"
+                }`}
+                disabled={toggling}
+              >
+                {toggling ? "Working..." : released ? "Hide Results" : "Release Results"}
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Question Sets + Uploader */}
-        <div className="mb-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="col-span-2 bg-[rgba(7,10,23,0.6)] border border-slate-800 rounded-lg p-4">
-            <h3 className="text-lg text-white font-semibold mb-3">Question Sets</h3>
-            <div className="space-y-2">
-              {loadingSets && <div className="text-slate-300">Loading sets...</div>}
-              {!loadingSets && sets.length === 0 && <div className="text-slate-400">No sets found — upload a set to begin.</div>}
-              {!loadingSets && sets.map(s => (
-                <div key={s.id} className="flex items-center justify-between gap-3 p-3 bg-[rgba(10,15,25,0.4)] border border-slate-800 rounded">
-                  <div>
-                    <div className="text-sm text-slate-300">{s.name}</div>
-                    <div className="text-xs text-slate-500">{s.createdAt?.toDate ? s.createdAt.toDate().toLocaleString() : ""}</div>
+        {/* Question Sets & Uploader */}
+        <div className="mb-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 relative min-h-[400px] lg:min-h-0">
+            <div className="lg:absolute lg:inset-0 bg-[#111116] border border-white/10 rounded-2xl p-6 shadow-2xl overflow-hidden flex flex-col h-full">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-[80px] pointer-events-none"></div>
+              
+              <h3 className="text-xl text-white font-bold mb-6 relative z-10 shrink-0">Question Sets</h3>
+              
+              <div className="space-y-3 relative z-10 overflow-y-auto pr-2 custom-scrollbar flex-1 min-h-0">
+                {loadingSets && <div className="text-slate-400 flex items-center gap-2"><div className="w-4 h-4 border-t-2 border-indigo-500 rounded-full animate-spin"></div>Loading sets...</div>}
+                {!loadingSets && sets.length === 0 && <div className="text-slate-500 italic">No sets found — upload a set to begin.</div>}
+                
+                {!loadingSets && sets.map(s => (
+                  <div key={s.id} className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border transition-all ${activeSetId === s.id ? 'bg-indigo-500/10 border-indigo-500/30' : 'bg-white/5 border-white/10 hover:bg-white/10'}`}>
+                    <div>
+                      <div className="text-base text-slate-200 font-medium mb-1 flex items-center gap-2">
+                        {s.name}
+                        {activeSetId === s.id && <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-400 uppercase tracking-wider border border-indigo-500/20">Active</span>}
+                      </div>
+                      <div className="text-xs text-slate-500 font-mono">{s.createdAt?.toDate ? s.createdAt.toDate().toLocaleString() : ""}</div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      {activeSetId !== s.id && (
+                        <button 
+                          onClick={() => handleSetActiveSet(s.id)} 
+                          className="px-3 py-1.5 text-xs font-medium rounded-lg bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500 hover:text-white transition-colors"
+                        >
+                          Make active
+                        </button>
+                      )}
+                      <button 
+                        onClick={async () => {
+                          try {
+                            const q = query(collection(db, "questionSets", s.id, "questions"), orderBy("createdAt", "desc"));
+                            const snap = await getDocs(q);
+                            alert(`Set "${s.name}" contains ${snap.size} questions.`);
+                          } catch (err) {
+                            console.error(err);
+                            alert("Failed to fetch count.");
+                          }
+                        }}
+                        className="px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white transition-colors border border-white/10"
+                      >
+                        Count
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="text-sm text-slate-300 mr-2"> {activeSetId === s.id ? <span className="text-green-300 font-semibold">Active</span> : <span className="text-slate-400">Not active</span>} </div>
-                    <Button onClick={() => handleSetActiveSet(s.id)} className="text-sm">Make active</Button>
-                    <Button variant="muted" onClick={async () => {
-                      // quick preview count
-                      try {
-                        const q = query(collection(db, "questionSets", s.id, "questions"), orderBy("createdAt", "desc"));
-                        const snap = await getDocs(q);
-                        alert(`Set "${s.name}" contains ${snap.size} questions.`);
-                      } catch (err) {
-                        console.error(err);
-                        alert("Failed to fetch count.");
-                      }
-                    }}>Count</Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4">
-              <Button onClick={() => { handleSetActiveSet(null); }} variant="muted">Clear active set</Button>
+                ))}
+              </div>
+              
+              <div className="mt-6 pt-4 border-t border-white/10 relative z-10 flex justify-end shrink-0">
+                <button 
+                  onClick={() => handleSetActiveSet(null)} 
+                  className="px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:text-white transition-colors"
+                >
+                  Clear active set
+                </button>
+              </div>
             </div>
           </div>
 
-          <div className="bg-[rgba(7,10,23,0.6)] border border-slate-800 rounded-lg p-4">
-            <h3 className="text-lg text-white font-semibold mb-3">Uploader</h3>
-            <AdminQuestionUploader onUploaded={() => { loadSets(); }} sets={sets} activeSetId={activeSetId} />
+          <div className="bg-[#111116] border border-white/10 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+            <h3 className="text-xl text-white font-bold mb-6">Uploader</h3>
+            <div className="relative z-10">
+              <AdminQuestionUploader onUploaded={() => { loadSets(); }} sets={sets} activeSetId={activeSetId} />
+            </div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="mb-6 bg-[rgba(7,10,23,0.6)] border border-slate-800 rounded-lg p-4 flex flex-col md:flex-row items-start md:items-center gap-4">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-slate-300 mb-1">Search (name, email, roll)</label>
-            <input
-              className="w-full bg-[#071022] text-slate-100 px-3 py-2 rounded border border-slate-700 focus:ring-2 focus:ring-[#06b6d4]"
-              value={queryText}
-              onChange={(e) => setQueryText(e.target.value)}
-              placeholder="Search by name, email or roll number"
-            />
+        <div className="mb-6 bg-[#111116] border border-white/10 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row items-start md:items-end gap-6">
+          <div className="flex-1 w-full">
+            <label className="block text-sm font-medium text-slate-400 mb-2">Search Candidates</label>
+            <div className="relative">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              <input
+                className="w-full bg-white/5 text-white pl-10 pr-4 py-2.5 rounded-xl border border-white/10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all placeholder:text-slate-600"
+                value={queryText}
+                onChange={(e) => setQueryText(e.target.value)}
+                placeholder="Search by name, email, or register number..."
+              />
+            </div>
           </div>
 
-          <div className="flex items-end gap-3">
+          <div className="flex items-end gap-4 w-full md:w-auto">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Min score</label>
+              <label className="block text-sm font-medium text-slate-400 mb-2">Min Score</label>
               <input
-                className="w-28 bg-[#071022] text-slate-100 px-2 py-2 rounded border border-slate-700 focus:ring-2 focus:ring-[#6366f1]"
+                className="w-full md:w-24 bg-white/5 text-white px-4 py-2.5 rounded-xl border border-white/10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all text-center"
                 value={minScore}
                 onChange={(e) => setMinScore(e.target.value)}
-                placeholder="min"
+                placeholder="0"
                 type="number"
               />
             </div>
-
+            <div className="text-slate-500 pb-3 font-medium">-</div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Max score</label>
+              <label className="block text-sm font-medium text-slate-400 mb-2">Max Score</label>
               <input
-                className="w-28 bg-[#071022] text-slate-100 px-2 py-2 rounded border border-slate-700 focus:ring-2 focus:ring-[#7c3aed]"
+                className="w-full md:w-24 bg-white/5 text-white px-4 py-2.5 rounded-xl border border-white/10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all text-center"
                 value={maxScore}
                 onChange={(e) => setMaxScore(e.target.value)}
-                placeholder="max"
+                placeholder="100"
                 type="number"
               />
             </div>
 
             <div>
-              <Button variant="muted" onClick={clearFilters} className="text-slate-200 border border-slate-700" disabled={deleting}>
+              <button 
+                onClick={clearFilters} 
+                className="px-5 py-2.5 text-sm font-medium rounded-xl text-slate-400 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition-colors h-[46px]" 
+                disabled={deleting}
+              >
                 Clear
-              </Button>
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto bg-[rgba(15,23,42,0.6)] border border-slate-800 rounded-lg p-3">
-          <table className="w-full text-sm table-fixed">
-            <thead>
-              <tr className="text-left text-slate-300">
-                <th className="p-3 w-44">Name</th>
-                <th className="p-3 w-56">Email</th>
-                <th className="p-3 w-36">Register</th>
-                <th className="p-3 w-20">Score</th>
-                <th className="p-3 w-36">Submitted At</th>
-                <th className="p-3 w-24">Tab Switches</th>
-                <th className="p-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredResults.map(r => (
-                <tr key={r.id} className="border-t border-slate-800">
-                  <td className="p-3 text-slate-100">{r.name}</td>
-                  <td className="p-3 text-slate-300">{r.email}</td>
-                  <td className="p-3 text-slate-300">{r.rollNo ?? ""}</td>
-                  <td className="p-3 font-semibold text-white">{r.score ?? ""}</td>
-                  <td className="p-3 text-slate-300">{r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString() : String(r.createdAt ?? "")}</td>
-                  <td className="p-3 text-slate-300">{r.tabSwitchCount ?? 0}</td>
-                  <td className="p-3">
-                    <button
-                      className="text-sky-300 underline text-sm"
-                      onClick={() => {
-                        const details = JSON.stringify(r.answers ?? {}, null, 2);
-                        alert(`Details for ${r.name ?? r.email}:\n\nScore: ${r.score}\n\nAnswers:\n${details}`);
-                      }}
-                    >
-                      View
-                    </button>
-                  </td>
+        {/* Results Table */}
+        <div className="bg-[#111116] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left border-collapse">
+              <thead>
+                <tr className="bg-white/[0.03] border-b border-white/10 text-slate-400">
+                  <th className="px-6 py-4 font-semibold w-48">Candidate Name</th>
+                  <th className="px-6 py-4 font-semibold w-64">Email Address</th>
+                  <th className="px-6 py-4 font-semibold w-36">Register No.</th>
+                  <th className="px-6 py-4 font-semibold w-24 text-center">Score</th>
+                  <th className="px-6 py-4 font-semibold w-48">Submitted At</th>
+                  <th className="px-6 py-4 font-semibold w-32 text-center">Tab Switches</th>
+                  <th className="px-6 py-4 font-semibold text-right">Actions</th>
                 </tr>
-              ))}
-              {filteredResults.length === 0 && (
-                <tr>
-                  <td className="p-6 text-slate-300" colSpan={7}>No results match the filters</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-white/[0.05]">
+                {filteredResults.map(r => (
+                  <tr key={r.id} className="hover:bg-white/[0.02] transition-colors group">
+                    <td className="px-6 py-4 text-slate-200 font-medium">{r.name}</td>
+                    <td className="px-6 py-4 text-slate-400">{r.email}</td>
+                    <td className="px-6 py-4 text-slate-400 font-mono text-xs">{r.rollNo ?? "-"}</td>
+                    <td className="px-6 py-4 text-center">
+                      <span className="inline-flex items-center justify-center min-w-[3rem] px-2 py-1 rounded bg-white/5 border border-white/10 text-white font-bold font-mono">
+                        {r.score ?? "-"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-400 text-xs">
+                      {r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString(undefined, {
+                        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                      }) : String(r.createdAt ?? "-")}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      {r.tabSwitchCount && r.tabSwitchCount > 0 ? (
+                        <span className="text-indigo-400 font-bold">{r.tabSwitchCount}</span>
+                      ) : (
+                        <span className="text-slate-600">0</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium text-indigo-400 hover:text-white hover:bg-indigo-500/20 transition-colors border border-transparent hover:border-indigo-500/30 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                        onClick={() => {
+                          const details = JSON.stringify(r.answers ?? {}, null, 2);
+                          alert(`Details for ${r.name ?? r.email}:\n\nScore: ${r.score}\n\nAnswers:\n${details}`);
+                        }}
+                      >
+                        View JSON
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {filteredResults.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="px-6 py-16 text-center text-slate-500">
+                      <div className="flex flex-col items-center justify-center">
+                        <svg className="w-10 h-10 mb-3 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                        No results match your current filters.
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
       </div>

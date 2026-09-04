@@ -6,11 +6,25 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+firebase-debug.log*
+firebase-debug.err*
 
+# Dependencies
 node_modules
 dist
 dist-ssr
-*.local
+build
+out
+.pnp
+.pnp.js
+
+# Local environment variables
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Editor directories and files
 .vscode/*
@@ -23,6 +37,24 @@ dist-ssr
 *.sln
 *.sw?
 
-.env
-.env.*
+# Firebase
+.firebase/
 
+# Testing
+coverage/
+
+# Vercel / Netlify
+.vercel/
+.netlify/
+
+# Vite / Bun / Temp
+vite.config.ts.timestamp-*
+*.tsbuildinfo
+.tempmediaStorage/
+
+# Scratch Scripts & References
+Reference/
+convert_content.cjs
+convert_html.cjs
+extract_content.cjs
+update_content.py

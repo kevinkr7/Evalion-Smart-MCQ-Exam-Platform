@@ -45,7 +45,7 @@ export default function MemberLogin() {
         },
       });
       toast && toast({ title: "Signed in", description: "Welcome back!" });
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: any) {
       console.error("Sign-in error", error);
       setErr(error?.message ?? "Failed to sign in");
@@ -84,7 +84,7 @@ export default function MemberLogin() {
         <Button
           size="sm"
           onClick={handleSignOut}
-          className="bg-slate-700 text-white hover:bg-slate-600"
+          className="bg-transparent border border-white/10 text-white hover:bg-white/5 transition-colors"
         >
           Sign out
         </Button>
@@ -93,30 +93,30 @@ export default function MemberLogin() {
   }
 
   return (
-    <form onSubmit={handleSignIn} className="space-y-3">
+    <form onSubmit={handleSignIn} className="space-y-4">
       <div>
-        <Label className="text-slate-300">Student Email</Label>
+        <Label className="text-slate-400 mb-1.5 block font-medium">Student Email</Label>
         <Input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="bg-slate-800 text-white border border-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="bg-[#111116] text-white border border-white/10 placeholder-slate-600 focus:outline-none focus:border-white/30 focus:ring-0 transition-all h-11"
           placeholder="student@example.com"
         />
       </div>
       <div>
-        <Label className="text-slate-300">Password</Label>
+        <Label className="text-slate-400 mb-1.5 block font-medium">Password</Label>
         <Input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="bg-slate-800 text-white border border-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="bg-[#111116] text-white border border-white/10 placeholder-slate-600 focus:outline-none focus:border-white/30 focus:ring-0 transition-all h-11"
           placeholder="••••••••"
         />
       </div>
 
-      {err && <div className="text-xs text-red-300">{err}</div>}
+      {err && <div className="text-sm text-red-400">{err}</div>}
 
-      <div className="flex justify-end gap-2">
+      <div className="flex gap-3 pt-2">
         <Button
           type="button"
           onClick={() => {
@@ -124,14 +124,14 @@ export default function MemberLogin() {
             setPassword("");
             setErr(null);
           }}
-          className="bg-slate-700 text-white hover:bg-slate-600"
+          className="flex-1 bg-transparent border border-white/10 text-white hover:bg-white/5 transition-colors h-11"
         >
           Cancel
         </Button>
         <Button
           type="submit"
           disabled={loading}
-          className="bg-gradient-to-r from-[#6366f1] to-[#7c3aed] text-white hover:opacity-90"
+          className="flex-1 bg-white text-[#0b0b0d] hover:bg-slate-200 transition-colors font-medium h-11"
         >
           {loading ? "Signing..." : "Sign in"}
         </Button>

@@ -220,129 +220,145 @@ export default function AdminQuestionUploader() {
   }
 
   return (
-    <div className="p-4 bg-[rgba(7,10,23,0.6)] border border-slate-800 rounded-lg shadow-lg">
-      <h3 className="text-lg font-semibold text-white mb-1">Upload Questions (CSV)</h3>
-      <p className="text-sm text-slate-300 mb-3">
-        CSV columns: <strong className="text-white">question, wrong1, wrong2, wrong3, correct</strong>.
-      </p>
+    <div className="flex flex-col gap-6">
+      <div>
+        <p className="text-sm text-slate-400 mb-2">
+          Upload a CSV file to add questions. Required columns:
+        </p>
+        <div className="flex flex-wrap gap-2 mb-4 text-xs font-mono">
+          <span className="px-2 py-1 rounded bg-white/5 border border-white/10 text-slate-300">question</span>
+          <span className="px-2 py-1 rounded bg-white/5 border border-white/10 text-slate-300">wrong1</span>
+          <span className="px-2 py-1 rounded bg-white/5 border border-white/10 text-slate-300">wrong2</span>
+          <span className="px-2 py-1 rounded bg-white/5 border border-white/10 text-slate-300">wrong3</span>
+          <span className="px-2 py-1 rounded bg-indigo-500/20 border border-indigo-500/30 text-indigo-300">correct</span>
+        </div>
+      </div>
 
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-3">
-          {/* Row 1: File picker */}
-          <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-2 rounded bg-[rgba(255,255,255,0.03)] border border-slate-700 text-slate-200 hover:bg-[rgba(255,255,255,0.05)] w-fit">
-            <input
-              type="file"
-              accept=".csv,text/csv"
-              onChange={(e) => handleFile(e.target.files ? e.target.files[0] : null)}
-              className="hidden"
-            />
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-              <path d="M12 4v8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M8 8l4-4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <rect x="3" y="12" width="18" height="8" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-            </svg>
-            <span className="text-sm">Choose CSV</span>
-          </label>
-
-          {/* Row 2: Clear + Upload */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Button
-              onClick={() => { setFileRows([]); setPreview([]); setLastReport(null); }}
-              variant="muted"
-              className="flex-1 text-slate-200 border border-slate-700 hover:bg-slate-800"
-            >
-              Clear
-            </Button>
-
-            <Button
-              onClick={upload}
-              disabled={uploading || fileRows.length === 0}
-              className="flex-1 bg-gradient-to-r from-[#6366f1] to-[#7c3aed] text-white"
-            >
-              {uploading ? "Uploading..." : "Upload (create set & questions)"}
-            </Button>
+      <div className="space-y-5 p-5 bg-white/[0.02] border border-white/[0.05] rounded-xl">
+        {/* Step 1: File Selection */}
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-2">1. Select CSV File</label>
+          <div className="flex items-center gap-3">
+            <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-200 hover:bg-white/10 transition-colors w-full sm:w-auto justify-center">
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                onChange={(e) => handleFile(e.target.files ? e.target.files[0] : null)}
+                className="hidden"
+              />
+              <svg className="w-4 h-4 text-indigo-400" viewBox="0 0 24 24" fill="none">
+                <path d="M12 4v8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 8l4-4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <rect x="3" y="12" width="18" height="8" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+              </svg>
+              <span className="text-sm font-medium">{fileRows.length > 0 ? `${fileRows.length} rows loaded` : "Choose CSV File"}</span>
+            </label>
+            
+            {fileRows.length > 0 && (
+              <button
+                onClick={() => { setFileRows([]); setPreview([]); setLastReport(null); }}
+                className="px-3 py-2.5 text-sm rounded-xl text-slate-400 hover:text-white transition-colors"
+              >
+                Clear
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-  <div>
-    <label className="block text-xs text-slate-300 mb-1">Upload target</label>
-    <select
-      value={selectedSetId}
-      onChange={(e) => setSelectedSetId(e.target.value as any)}
-      className="w-full bg-[#071022] text-slate-100 px-3 py-2 rounded border border-slate-700"
-    >
-      <option value="new">Create new set (recommended)</option>
-      {sets.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-    </select>
-  </div>
+        <hr className="border-white/10" />
 
-  <div className="overflow-hidden">
-    <label className="block text-xs text-slate-300 mb-1">If creating new set, give it a name (optional)</label>
-    <input
-      value={newSetName}
-      onChange={(e) => setNewSetName(e.target.value)}
-      placeholder="My August set (optional)"
-      className="w-full bg-[#071022] text-slate-100 px-3 py-2 rounded border border-slate-700"
-    />
+        {/* Step 2: Target Set */}
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-2">2. Select Target Set</label>
+          <div className="grid grid-cols-1 gap-4">
+            <select
+              value={selectedSetId}
+              onChange={(e) => setSelectedSetId(e.target.value as any)}
+              className="w-full bg-white/5 text-slate-100 px-4 py-2.5 rounded-xl border border-white/10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all appearance-none cursor-pointer"
+            >
+              <option value="new" className="bg-[#111116]">+ Create new set (recommended)</option>
+              {sets.map(s => <option key={s.id} value={s.id} className="bg-[#111116]">{s.name}</option>)}
+            </select>
 
-    {/* Responsive button group: stacked on small screens, row on larger screens */}
-    <div className="mt-2 flex flex-col sm:flex-row gap-2">
-      <Button
-        onClick={() => {
-          if (!newSetName.trim()) return alert("Enter a set name");
-          createSet(newSetName.trim())
-            .then(id => {
-              setSelectedSetId(id);
-              alert("Set created: " + id);
-            })
-            .catch(err => {
-              console.error(err);
-              alert("Create failed");
-            });
-        }}
-        className="w-full sm:w-auto flex-1"
-      >
-        Create set now
-      </Button>
-    </div>
-  </div>
-</div>
-
-
-        {progressText && <div className="text-sm text-slate-300 mt-1">Progress: {progressText}</div>}
-        {lastReport && <div className="text-sm text-slate-300 mt-1">Report: {lastReport}</div>}
-
-        {preview.length > 0 && (
-          <div>
-            <h4 className="font-medium text-white">Preview (first {preview.length} rows)</h4>
-            <div className="overflow-auto max-h-56 border border-slate-800 rounded mt-2 p-2 bg-[rgba(10,15,25,0.35)]">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-slate-300">
-                    <th className="p-2 text-left">Q</th>
-                    <th className="p-2 text-left">wrong1</th>
-                    <th className="p-2 text-left">wrong2</th>
-                    <th className="p-2 text-left">wrong3</th>
-                    <th className="p-2 text-left">correct</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {preview.map((r, idx) => (
-                    <tr key={idx} className="border-t border-slate-800">
-                      <td className="p-2 text-slate-100">{r.question}</td>
-                      <td className="p-2 text-slate-300">{r.w1}</td>
-                      <td className="p-2 text-slate-300">{r.w2}</td>
-                      <td className="p-2 text-slate-300">{r.w3}</td>
-                      <td className="p-2 text-slate-300">{r.correct}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            {selectedSetId === "new" && (
+              <div className="bg-indigo-500/5 p-4 rounded-xl border border-indigo-500/20">
+                <label className="block text-xs font-medium text-indigo-300 mb-2">New Set Name</label>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    value={newSetName}
+                    onChange={(e) => setNewSetName(e.target.value)}
+                    placeholder="e.g. August Assessment"
+                    className="flex-1 bg-white/5 text-slate-100 px-3 py-2 rounded-lg border border-white/10 focus:border-indigo-500 focus:outline-none transition-all placeholder:text-slate-600"
+                  />
+                  <button
+                    onClick={() => {
+                      if (!newSetName.trim()) return alert("Enter a set name");
+                      createSet(newSetName.trim())
+                        .then(id => {
+                          setSelectedSetId(id);
+                          alert("Set created: " + id);
+                        })
+                        .catch(err => {
+                          console.error(err);
+                          alert("Create failed");
+                        });
+                    }}
+                    className="px-4 py-2 text-xs font-medium rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-colors"
+                  >
+                    Create
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
+
+        <hr className="border-white/10" />
+
+        {/* Step 3: Upload */}
+        <div>
+          <button
+            onClick={upload}
+            disabled={uploading || fileRows.length === 0}
+            className="w-full py-3 px-4 rounded-xl text-sm font-bold tracking-wide transition-all bg-indigo-600 hover:bg-indigo-500 text-white shadow-[0_0_15px_rgba(79,70,229,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {uploading ? "Uploading..." : "Upload Questions"}
+          </button>
+          
+          {progressText && <div className="text-xs font-mono text-indigo-400 mt-2 text-center">{progressText}</div>}
+          {lastReport && <div className="text-xs text-slate-400 mt-2 text-center p-2 bg-white/5 rounded-lg">{lastReport}</div>}
+        </div>
       </div>
+
+      {preview.length > 0 && (
+        <div className="mt-2">
+          <h4 className="text-sm font-medium text-slate-300 mb-2">Preview (first {preview.length} rows)</h4>
+          <div className="overflow-auto max-h-56 border border-white/10 rounded-xl bg-white/[0.02] custom-scrollbar">
+            <table className="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr className="bg-white/[0.02] border-b border-white/10 text-slate-400">
+                  <th className="px-3 py-2 font-medium">Question</th>
+                  <th className="px-3 py-2 font-medium">Wrong 1</th>
+                  <th className="px-3 py-2 font-medium">Wrong 2</th>
+                  <th className="px-3 py-2 font-medium">Wrong 3</th>
+                  <th className="px-3 py-2 font-medium text-indigo-300">Correct</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/[0.05]">
+                {preview.map((r, idx) => (
+                  <tr key={idx} className="hover:bg-white/[0.02]">
+                    <td className="px-3 py-2 text-slate-200">{r.question}</td>
+                    <td className="px-3 py-2 text-slate-400">{r.w1}</td>
+                    <td className="px-3 py-2 text-slate-400">{r.w2}</td>
+                    <td className="px-3 py-2 text-slate-400">{r.w3}</td>
+                    <td className="px-3 py-2 text-indigo-300 font-medium">{r.correct}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -297,97 +297,130 @@ export default function ResultsReview() {
     const selectedByUser = userAnswer === key;
 
     const bgClass = correct
-      ? "bg-[rgba(16,185,129,0.12)] border border-green-500"
+      ? "bg-emerald-50 border border-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.1)]"
       : selectedByUser
-        ? "bg-[rgba(239,68,68,0.08)] border border-red-500"
-        : "bg-transparent border border-transparent";
+        ? "bg-red-50 border border-red-300 shadow-[0_0_10px_rgba(239,68,68,0.1)]"
+        : "bg-white border border-slate-200";
 
-    const textClass = correct ? "text-green-300" : selectedByUser ? "text-red-300" : "text-slate-200";
-
+    const textClass = correct ? "text-emerald-700" : selectedByUser ? "text-red-700" : "text-slate-600";
+    const iconBorderClass = correct ? "border-emerald-500 bg-emerald-100" : selectedByUser ? "border-red-500 bg-red-100" : "border-slate-300 bg-slate-100";
+    
     return (
-      <div key={key} className={`p-3 rounded-md ${bgClass} flex items-start gap-3`}>
-        <div className={`w-8 h-8 flex items-center justify-center rounded-full border ${correct ? "border-green-500" : selectedByUser ? "border-red-500" : "border-slate-700"}`}>
-          <div className={`font-semibold ${textClass}`}>{key}</div>
+      <div key={key} className={`p-4 rounded-xl ${bgClass} flex items-start gap-4 transition-all duration-300`}>
+        <div className={`w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-full border ${iconBorderClass}`}>
+          <div className={`font-bold text-sm ${textClass}`}>{key}</div>
         </div>
-        <div className="flex-1">
-          <div className={`text-sm ${textClass}`}>{q.choices ? (q.choices as any)[key] : ""}</div>
+        <div className="flex-1 pt-1">
+          <div className={`text-sm font-medium ${textClass}`}>{q.choices ? (q.choices as any)[key] : ""}</div>
         </div>
 
-        <div className="w-6">
-          {correct && <span className="text-green-400 font-bold">✓</span>}
-          {!correct && selectedByUser && <span className="text-red-400 font-bold">✕</span>}
+        <div className="w-6 pt-1 flex-shrink-0">
+          {correct && <span className="text-emerald-600 font-bold text-lg">✓</span>}
+          {!correct && selectedByUser && <span className="text-red-600 font-bold text-lg">✕</span>}
         </div>
       </div>
     );
   };
 
-  if (loading) return <div className="p-6 text-slate-200">Loading review...</div>;
+  if (loading) return (
+    <div className="min-h-screen relative bg-[#f9fafb] flex items-center justify-center text-slate-500">
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(120% 70% at 50% 0%, #ffffff 0%, #f3f4f6 50%, #e5e7eb 100%)' }}></div>
+      <div className="relative z-10 text-lg font-medium animate-pulse">Loading review...</div>
+    </div>
+  );
+  
   if (error) return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#05040a] via-[#071020] to-[#0b0b14] text-slate-200">
-      <div className="text-center space-y-4">
-        <h2 className="text-2xl font-bold text-red-400">Access Denied</h2>
-        <p className="text-slate-400">{error}</p>
-        <Button onClick={() => navigate("/")}>Go Home</Button>
+    <div className="min-h-screen relative bg-[#f9fafb] flex items-center justify-center font-['Geist'] text-slate-800">
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(120% 70% at 50% 0%, #ffffff 0%, #f3f4f6 50%, #e5e7eb 100%)' }}></div>
+      <div className="relative z-10 text-center space-y-5 bg-white p-10 rounded-2xl shadow-xl border border-slate-200">
+        <h2 className="text-2xl font-extrabold text-red-500">Access Denied</h2>
+        <p className="text-slate-500 font-medium">{error}</p>
+        <Button onClick={() => navigate("/")} className="bg-slate-900 text-white hover:bg-slate-800 rounded-xl px-8">Go Home</Button>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#05040a] via-[#071020] to-[#0b0b14] p-6 text-slate-100">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#7c3aed] via-[#6366f1] to-[#06b6d4]">Your Answers — Review</h2>
-          <div className="flex gap-2">
-            <Button onClick={() => navigate("/")}>Home</Button>
-            <Button onClick={() => window.print()} className="bg-gradient-to-r from-[#6366f1] to-[#7c3aed]">Print</Button>
+    <div className="min-h-screen relative bg-[#f9fafb] text-slate-800 overflow-x-hidden font-['Geist']">
+      {/* Premium Light Background Effects */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(120% 70% at 50% 0%, #ffffff 0%, #f3f4f6 50%, #e5e7eb 100%)' }}></div>
+      <div className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.35] z-0" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`}}></div>
+
+      <div className="relative z-10 max-w-4xl mx-auto px-6 py-12 space-y-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center justify-center bg-white border border-slate-200 shadow-sm px-3 py-1 rounded-full mb-3">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Past Attempt</span>
+            </div>
+            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">Your Answers — Review</h2>
+          </div>
+          <div className="flex gap-3">
+            <Button onClick={() => navigate("/dashboard")} variant="outline" className="bg-white border-slate-200 text-slate-700 hover:bg-slate-50 shadow-sm rounded-xl">Dashboard</Button>
+            <Button onClick={() => window.print()} className="bg-slate-900 text-white hover:bg-slate-800 shadow-md rounded-xl">Print Report</Button>
           </div>
         </div>
 
-        <div className="space-y-4">
-          {questions.length === 0 && <div className="text-slate-300">No questions available for review.</div>}
+        <div className="space-y-6">
+          {questions.length === 0 && <div className="text-slate-500 bg-white p-6 rounded-2xl border border-slate-200 text-center shadow-sm">No questions available for review.</div>}
 
-          {/* Summary */}
-          <Card className="bg-[rgba(7,10,23,0.65)] border border-slate-800 shadow-2xl p-4">
-            <div className="flex justify-between items-center">
+          {/* Summary Card */}
+          <div className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 rounded-2xl p-6 relative overflow-hidden">
+            {/* Subtle light violet glow inside the card */}
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-violet-100 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
               <div>
-                <div className="text-sm text-slate-300">Score</div>
-                <div className="text-3xl font-extrabold text-white">{score ?? 0}</div>
+                <div className="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">Final Score</div>
+                <div className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-violet-600 to-indigo-600">{score ?? 0}</div>
               </div>
-              <div className="text-sm text-slate-300">
-                <div>Correct: <span className="font-semibold text-green-300">{correctCount}</span></div>
-                <div>Wrong: <span className="font-semibold text-red-300">{wrongCount}</span></div>
-                <div>Skipped: <span className="font-semibold text-yellow-300">{skippedCount}</span></div>
-                <div className="mt-2 text-xs text-slate-400">Questions: {questions.length}</div>
+              
+              <div className="flex gap-4 sm:gap-8">
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Correct</span>
+                  <span className="text-2xl font-bold text-emerald-600">{correctCount}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Wrong</span>
+                  <span className="text-2xl font-bold text-red-600">{wrongCount}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Skipped</span>
+                  <span className="text-2xl font-bold text-amber-500">{skippedCount}</span>
+                </div>
+                <div className="flex flex-col pl-4 sm:pl-8 border-l border-slate-100">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total</span>
+                  <span className="text-2xl font-bold text-slate-800">{questions.length}</span>
+                </div>
               </div>
             </div>
-          </Card>
+          </div>
 
+          {/* Questions */}
           {questions.map((q, idx) => {
             const userAns = answers ? answers[q.id] ?? null : null;
             const unanswered = userAns === null || typeof userAns === "undefined";
 
             return (
-              <Card key={q.id} className={`bg-[rgba(7,10,23,0.65)] border ${unanswered ? "border-yellow-500" : "border-slate-800"} shadow-2xl`}>
-                <CardHeader>
-                  <div className="flex items-center justify-between w-full">
-                    <CardTitle className="text-lg text-white">Question {idx + 1}</CardTitle>
-                    {unanswered && <div className="text-xs font-semibold bg-yellow-400/10 text-yellow-300 px-2 py-1 rounded">Unanswered</div>}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-3 text-slate-200 whitespace-pre-wrap">{q.text}</div>
+              <div key={q.id} className={`bg-white border ${unanswered ? "border-amber-300 shadow-[0_0_15px_rgba(252,211,77,0.2)]" : "border-slate-200"} shadow-lg shadow-slate-200/40 rounded-2xl overflow-hidden`}>
+                <div className={`px-6 py-4 border-b ${unanswered ? "border-amber-200 bg-amber-50/50" : "border-slate-100 bg-slate-50/50"} flex items-center justify-between`}>
+                  <h3 className="text-lg font-bold text-slate-800">Question {idx + 1}</h3>
+                  {unanswered && <div className="text-xs font-bold bg-amber-100 text-amber-700 px-3 py-1 rounded-full uppercase tracking-widest">Unanswered</div>}
+                </div>
+                
+                <div className="p-6">
+                  <div className="mb-6 text-slate-700 whitespace-pre-wrap font-medium text-base leading-relaxed">{q.text}</div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {["A","B","C","D"].map(k => renderChoice(q, k as any))}
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>
 
-        <div className="text-sm text-slate-300">
-          <p><span className="text-green-300 font-semibold">✓</span> correct option — <span className="text-red-300 font-semibold">✕</span> your wrong selection. Unanswered questions are highlighted in yellow.</p>
+        <div className="text-center text-sm font-medium text-slate-500 pt-8 pb-12">
+          <p><span className="text-emerald-600 font-bold text-lg align-middle">✓</span> indicates the correct option — <span className="text-red-600 font-bold text-lg align-middle">✕</span> indicates your incorrect selection.</p>
         </div>
       </div>
     </div>
