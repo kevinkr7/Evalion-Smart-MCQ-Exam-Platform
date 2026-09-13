@@ -18,13 +18,6 @@ The platform was built for real use among classmates, focusing on fairness, usab
 
 ---
 
-## 🌐 Live Deployment
-
-🔗 **Firebase Hosted App**  
-https://technical-quiz-1c612.web.app/
-
----
-
 ## 🛠️ Tech Stack
 
 - React (Vite)
